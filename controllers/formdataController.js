@@ -92,6 +92,59 @@ async function createFormData(formData) {
 //   }
 // };
 
+// const getAllUsers = async (req, res) => {
+//   try {
+//     const token = req.header("Authorization");
+//     if (!token) {
+//       return res
+//         .status(401)
+//         .json({ message: "Access denied. No token provided." });
+//     }
+//     const decoded = jwt.verify(
+//       token,
+//       process.env.JWT_SECRET || "your_secret_key"
+//     );
+//     req.admin = decoded;
+//     if (!decoded) {
+//       return res.status(403).json({ message: "Unauthorized token." });
+//     }
+//     const users = await db.DataForm.findAll();
+
+//     if (req.query.format === "xlsx") {
+//       if (users.length === 0) {
+//         return res.status(200).send("No data to export.");
+//       }
+//       const data = users.map((user) => Object.values(user.dataValues));
+//       const header = Object.keys(users[0].dataValues);
+
+//       const worksheet = XLSX.utils.aoa_to_sheet([header, ...data]);
+//       const workbook = XLSX.utils.book_new();
+//       XLSX.utils.book_append_sheet(workbook, worksheet, "Users Data");
+//       const excelBuffer = XLSX.write(workbook, {
+//         bookType: "xlsx",
+//         type: "buffer",
+//       });
+
+//       res.setHeader(
+//         "Content-Type",
+//         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+//       );
+//       res.setHeader(
+//         "Content-Disposition",
+//         'attachment; filename="users_data.xlsx"'
+//       );
+//       return res.status(200).send(Buffer.from(excelBuffer));
+//     } else {
+//       res.status(200).json(users); // Default to JSON if no format specified
+//     }
+//   } catch (error) {
+//     console.error("Error fetching users:", error);
+//     res
+//       .status(500)
+//       .json({ message: "Failed to fetch users", error: error.message });
+//   }
+// };
+
 const getAllUsers = async (req, res) => {
   try {
     const token = req.header("Authorization");
@@ -100,26 +153,38 @@ const getAllUsers = async (req, res) => {
         .status(401)
         .json({ message: "Access denied. No token provided." });
     }
+
     const decoded = jwt.verify(
       token,
       process.env.JWT_SECRET || "your_secret_key"
     );
     req.admin = decoded;
+
     if (!decoded) {
       return res.status(403).json({ message: "Unauthorized token." });
     }
-    const users = await db.DataForm.findAll();
 
+    const page = parseInt(req.query.page) || 1;
+    const limit = 5;
+    const offset = (page - 1) * limit;
+
+    const { count, rows: users } = await db.DataForm.findAndCountAll({
+      offset,
+      limit,
+    });
+
+    // Check for XLSX export
     if (req.query.format === "xlsx") {
       if (users.length === 0) {
         return res.status(200).send("No data to export.");
       }
+
       const data = users.map((user) => Object.values(user.dataValues));
       const header = Object.keys(users[0].dataValues);
-
       const worksheet = XLSX.utils.aoa_to_sheet([header, ...data]);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "Users Data");
+
       const excelBuffer = XLSX.write(workbook, {
         bookType: "xlsx",
         type: "buffer",
@@ -134,9 +199,16 @@ const getAllUsers = async (req, res) => {
         'attachment; filename="users_data.xlsx"'
       );
       return res.status(200).send(Buffer.from(excelBuffer));
-    } else {
-      res.status(200).json(users); // Default to JSON if no format specified
     }
+
+    // Return paginated users in JSON tabular format
+    res.status(200).json({
+      currentPage: page,
+      totalPages: Math.ceil(count / limit),
+      totalUsers: count,
+      users,
+    });
+
   } catch (error) {
     console.error("Error fetching users:", error);
     res
@@ -144,5 +216,6 @@ const getAllUsers = async (req, res) => {
       .json({ message: "Failed to fetch users", error: error.message });
   }
 };
+
 
 module.exports = { submitForm, getAllUsers };

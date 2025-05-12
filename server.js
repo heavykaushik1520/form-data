@@ -18,6 +18,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "https://artiststation.co.in", // Corrected origin
+      "http://localhost:3001",
     ],
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Specify allowed HTTP methods
     credentials: true, // Allow cookies to be sent (if needed)
