@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 7000;
 
 // Enable CORS for React app
 app.use(cors({
-  origin: 'http://localhost:3000', // React app URL
+  origin: 'https://artiststation.co.in/form/', // React app URL
 }));
 
 // Middleware
