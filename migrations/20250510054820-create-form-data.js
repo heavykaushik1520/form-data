@@ -13,6 +13,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      designation: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       arc_name: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -33,7 +37,15 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      personal_insta: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       firm_insta: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      personal_linkedin: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -42,11 +54,11 @@ module.exports = {
         allowNull: false,
       },
       top_projects: {
-        type: Sequelize.JSON,
+        type: Sequelize.TEXT,
         allowNull: false,
       },
       projects_2025: {
-        type: Sequelize.JSON,
+        type: Sequelize.TEXT,
         allowNull: false,
       },
       pick_up_location: {
@@ -59,6 +71,10 @@ module.exports = {
       },
       pick_up_time: {
         type: Sequelize.DATE,
+        allowNull: false,
+      },
+      vision:{
+        type: Sequelize.STRING, // added 11/05 10:30 am
         allowNull: false,
       },
       createdAt: {

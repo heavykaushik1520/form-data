@@ -1,42 +1,47 @@
-require("dotenv").config;
+require("dotenv").config();  // Ensure dotenv is properly loaded
 const express = require("express");
 const bodyParser = require("body-parser");
 const db = require("./models");
-const cors = require('cors');
+const cors = require("cors");
 
-
-//routes
+// Routes
 const adminRoutes = require("./routes/adminRoutes");
 const authRoutes = require("./routes/authRoutes");
 const formRoutes = require("./routes/formRoutes");
 
 const app = express();
-const PORT = 7000;
+const PORT = process.env.PORT || 7000;
 
+// Enable CORS for React app
 app.use(cors({
   origin: 'http://localhost:3000', // React app URL
-  
 }));
 
+// Middleware
 app.use(bodyParser.json());
-
-//use
-app.use("/api", adminRoutes);
-// Use your authentication routes
-app.use("/api/auth", authRoutes);
-
 app.use(express.urlencoded({ extended: true }));
-app.use("/uploads", express.static("uploads")); // to serve uploaded images
+app.use("/uploads", express.static("uploads")); // To serve uploaded images
+
+// Routes
+app.use("/api", adminRoutes);
+app.use("/api/auth", authRoutes);
 app.use("/api", formRoutes);
 
+// Test route
 app.get("/", (req, res) => {
   res.send("Hello from your Node.js Express app in Devrukh!");
 });
 
-db.sequelize.sync().then(() => {
-  console.log("Database synced!");
-});
+// Sync Database
+db.sequelize.sync()
+  .then(() => {
+    console.log("Database synced!");
+  })
+  .catch((error) => {
+    console.error("Error syncing database:", error);
+  });
 
+// Start server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

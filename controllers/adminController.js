@@ -21,8 +21,6 @@ async function createAdmin(req, res) {
   }
 }
 
-
 module.exports = {
   createAdmin,
-  
 };
