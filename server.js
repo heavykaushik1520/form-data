@@ -13,9 +13,16 @@ const app = express();
 const PORT = process.env.PORT || 7000;
 
 // Enable CORS for React app
-app.use(cors({
-  origin: 'https://artiststation.co.in/form/', // React app URL
-}));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "https://artiststation.co.in", // Corrected origin
+    ],
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Specify allowed HTTP methods
+    credentials: true, // Allow cookies to be sent (if needed)
+  })
+);
 
 // Middleware
 app.use(bodyParser.json());
