@@ -11,7 +11,7 @@ const submitForm = async (req, res) => {
 
   const formData = {
     firm_name: req.body.firm_name,
-    // arc_name: req.body.arc_name,
+    arc_name: req.body.arc_name,//did changes here
     designation: req.body.designation,
     arc_image: imageUrl,
     arc_quote: req.body.arc_quote,

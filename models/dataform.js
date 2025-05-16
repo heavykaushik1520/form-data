@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     "DataForm",
     {
       firm_name: DataTypes.STRING,
-      // arc_name: DataTypes.STRING,
+      arc_name: DataTypes.STRING,
       designation: DataTypes.STRING,
       arc_image: DataTypes.STRING,
       arc_quote: DataTypes.STRING,

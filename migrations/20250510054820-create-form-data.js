@@ -13,6 +13,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      arc_name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       designation: {
         type: Sequelize.STRING,
         allowNull: false,
