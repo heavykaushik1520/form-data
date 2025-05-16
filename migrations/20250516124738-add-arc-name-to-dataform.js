@@ -2,13 +2,25 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    return queryInterface.addColumn("data_forms", "arc_name", {
+    // 1. Update existing NULLs to a fallback value (e.g., "N/A")
+    await queryInterface.sequelize.query(`
+      UPDATE data_forms
+      SET arc_name = 'N/A'
+      WHERE arc_name IS NULL
+    `);
+
+    // 2. Change column to NOT NULL
+    return queryInterface.changeColumn("data_forms", "arc_name", {
       type: Sequelize.STRING,
-      allowNull: true, // or false if you want it to be required
+      allowNull: false,
     });
   },
 
   down: async (queryInterface, Sequelize) => {
-    return queryInterface.removeColumn("data_forms", "arc_name");
+    // Revert to allow null again
+    return queryInterface.changeColumn("data_forms", "arc_name", {
+      type: Sequelize.STRING,
+      allowNull: true,
+    });
   },
 };

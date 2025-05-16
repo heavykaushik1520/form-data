@@ -24,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         defaultValue: "Leela Bhartiya City, Bangalore	",
       },
-      pick_up_time: DataTypes.DATE,
+      pick_up_time: DataTypes.DATE, 
+      evening_drop_location: DataTypes.STRING
       // vision: DataTypes.STRING
     },
     {

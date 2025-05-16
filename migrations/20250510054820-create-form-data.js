@@ -21,7 +21,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-     
+
       arc_image: {
         type: Sequelize.TEXT,
         allowNull: false,
@@ -75,7 +75,11 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false,
       },
-      
+      evening_drop_location: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
