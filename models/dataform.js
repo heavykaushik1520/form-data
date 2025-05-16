@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     "DataForm",
     {
       firm_name: DataTypes.STRING,
-      arc_name: DataTypes.STRING,
+      // arc_name: DataTypes.STRING,
       designation: DataTypes.STRING,
       arc_image: DataTypes.STRING,
       arc_quote: DataTypes.STRING,
@@ -20,9 +20,12 @@ module.exports = (sequelize, DataTypes) => {
       top_projects: DataTypes.TEXT,
       projects_2025: DataTypes.TEXT,
       pick_up_location: DataTypes.STRING,
-      drop_location: DataTypes.STRING,
+      drop_location: {
+        type: DataTypes.STRING,
+        defaultValue: "Leela Bhartiya City, Bangalore	",
+      },
       pick_up_time: DataTypes.DATE,
-      vision: DataTypes.STRING
+      // vision: DataTypes.STRING
     },
     {
       tableName: "data_forms",

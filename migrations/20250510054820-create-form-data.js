@@ -17,10 +17,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      arc_name: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
+     
       arc_image: {
         type: Sequelize.TEXT,
         allowNull: false,
@@ -68,15 +65,13 @@ module.exports = {
       drop_location: {
         type: Sequelize.STRING,
         allowNull: false,
+        defaultValue: "Leela Bhartiya City, Bangalore",
       },
       pick_up_time: {
         type: Sequelize.DATE,
         allowNull: false,
       },
-      vision:{
-        type: Sequelize.STRING, // added 11/05 10:30 am
-        allowNull: false,
-      },
+      
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,

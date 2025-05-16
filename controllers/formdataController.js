@@ -6,12 +6,12 @@ const XLSX = require("xlsx");
 
 const submitForm = async (req, res) => {
   const imageUrl = req.file
-    ? `https://form-data-1-s260.onrender.com/uploads/${req.file.filename}`
+    ? `http://localhost:7000/uploads/${req.file.filename}`
     : null;
 
   const formData = {
     firm_name: req.body.firm_name,
-    arc_name: req.body.arc_name,
+    // arc_name: req.body.arc_name,
     designation: req.body.designation,
     arc_image: imageUrl,
     arc_quote: req.body.arc_quote,
@@ -36,7 +36,7 @@ const submitForm = async (req, res) => {
     pick_up_location: req.body.pick_up_location,
     drop_location: req.body.drop_location,
     pick_up_time: req.body.pick_up_time,
-    vision: req.body.vision,
+    // vision: req.body.vision,
   };
 
   try {
