@@ -6,7 +6,7 @@ const XLSX = require("xlsx");
 
 const submitForm = async (req, res) => {
   const imageUrl = req.file
-    ? `http://localhost:7000/uploads/${req.file.filename}`
+    ? `https://form-data-1-s260.onrender.com/${req.file.filename}`
     : null;
 
   const formData = {
