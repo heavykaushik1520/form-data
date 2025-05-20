@@ -76,7 +76,7 @@ module.exports = {
         allowNull: false,
       },
       evening_drop_location: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
       },
 

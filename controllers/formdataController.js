@@ -27,9 +27,9 @@ const submitForm = async (req, res) => {
     // projects_2025: Array.isArray(req.body.projects_2025)
     //   ? req.body.projects_2025
     //   : [req.body.projects_2025],
-    top_projects: Array.isArray(req.body.top_projects)
-      ? JSON.stringify(req.body.top_projects)
-      : JSON.stringify([req.body.top_projects]),
+    // top_projects: Array.isArray(req.body.top_projects)
+    //   ? JSON.stringify(req.body.top_projects)
+    //   : JSON.stringify([req.body.top_projects]),
     projects_2025: Array.isArray(req.body.projects_2025)
       ? JSON.stringify(req.body.projects_2025)
       : JSON.stringify([req.body.projects_2025]),
@@ -146,6 +146,78 @@ async function createFormData(formData) {
 //   }
 // };
 
+// const getAllUsers = async (req, res) => {
+//   try {
+//     const token = req.header("Authorization");
+//     if (!token) {
+//       return res
+//         .status(401)
+//         .json({ message: "Access denied. No token provided." });
+//     }
+
+//     const decoded = jwt.verify(
+//       token,
+//       process.env.JWT_SECRET || "your_secret_key"
+//     );
+//     req.admin = decoded;
+
+//     if (!decoded) {
+//       return res.status(403).json({ message: "Unauthorized token." });
+//     }
+
+//     const page = parseInt(req.query.page) || 1;
+//     const limit = 5;
+//     const offset = (page - 1) * limit;
+
+//     const { count, rows: users } = await db.DataForm.findAndCountAll({
+//       offset,
+//       limit,
+//     });
+
+//     // Check for XLSX export
+//     if (req.query.format === "xlsx") {
+//       if (users.length === 0) {
+//         return res.status(200).send("No data to export.");
+//       }
+
+//       const data = users.map((user) => Object.values(user.dataValues));
+//       const header = Object.keys(users[0].dataValues);
+//       const worksheet = XLSX.utils.aoa_to_sheet([header, ...data]);
+//       const workbook = XLSX.utils.book_new();
+//       XLSX.utils.book_append_sheet(workbook, worksheet, "Users Data");
+
+//       const excelBuffer = XLSX.write(workbook, {
+//         bookType: "xlsx",
+//         type: "buffer",
+//       });
+
+//       res.setHeader(
+//         "Content-Type",
+//         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+//       );
+//       res.setHeader(
+//         "Content-Disposition",
+//         'attachment; filename="users_data.xlsx"'
+//       );
+//       return res.status(200).send(Buffer.from(excelBuffer));
+//     }
+
+//     // Return paginated users in JSON tabular format
+//     res.status(200).json({
+//       currentPage: page,
+//       totalPages: Math.ceil(count / limit),
+//       totalUsers: count,
+//       users,
+//     });
+
+//   } catch (error) {
+//     console.error("Error fetching users:", error);
+//     res
+//       .status(500)
+//       .json({ message: "Failed to fetch users", error: error.message });
+//   }
+// };
+
 const getAllUsers = async (req, res) => {
   try {
     const token = req.header("Authorization");
@@ -165,17 +237,31 @@ const getAllUsers = async (req, res) => {
       return res.status(403).json({ message: "Unauthorized token." });
     }
 
-    const page = parseInt(req.query.page) || 1;
+    const isExcel = req.query.format === "xlsx";
+    let users = [];
+    let count = 0;
+    let page = 1;
     const limit = 5;
-    const offset = (page - 1) * limit;
 
-    const { count, rows: users } = await db.DataForm.findAndCountAll({
-      offset,
-      limit,
-    });
+    if (isExcel) {
+      // ✅ Fetch all users for Excel export
+      users = await db.DataForm.findAll();
+      count = users.length;
+    } else {
+      // ✅ Fetch paginated data for UI
+      page = parseInt(req.query.page) || 1;
+      const offset = (page - 1) * limit;
 
-    // Check for XLSX export
-    if (req.query.format === "xlsx") {
+      const result = await db.DataForm.findAndCountAll({
+        offset,
+        limit,
+      });
+
+      users = result.rows;
+      count = result.count;
+    }
+
+    if (isExcel) {
       if (users.length === 0) {
         return res.status(200).send("No data to export.");
       }
@@ -202,7 +288,7 @@ const getAllUsers = async (req, res) => {
       return res.status(200).send(Buffer.from(excelBuffer));
     }
 
-    // Return paginated users in JSON tabular format
+    // ✅ JSON paginated response
     res.status(200).json({
       currentPage: page,
       totalPages: Math.ceil(count / limit),
@@ -212,11 +298,13 @@ const getAllUsers = async (req, res) => {
 
   } catch (error) {
     console.error("Error fetching users:", error);
-    res
-      .status(500)
-      .json({ message: "Failed to fetch users", error: error.message });
+    res.status(500).json({
+      message: "Failed to fetch users",
+      error: error.message,
+    });
   }
 };
+
 
 
 module.exports = { submitForm, getAllUsers };

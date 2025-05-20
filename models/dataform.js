@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       firm_insta: DataTypes.STRING,
       personal_linkedin: DataTypes.STRING,
       firm_linkedin: DataTypes.STRING,
-      top_projects: DataTypes.TEXT,
+      // top_projects: DataTypes.TEXT,
       projects_2025: DataTypes.TEXT,
       pick_up_location: DataTypes.STRING,
       drop_location: {

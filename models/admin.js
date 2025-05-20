@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
       role: DataTypes.STRING,
     },
     {
-      tableName: "admins",
+      tableName: "admins_showgrid",
       // paranoid: true,
     }
   );
